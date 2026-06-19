@@ -1,0 +1,8 @@
+build/
+*.spec
+__pycache__/
+*.pyc
+*.pyo
+data.json
+diary.json
+*.exe
