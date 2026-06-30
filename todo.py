@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 import json
 import os
 import sys
@@ -110,6 +110,12 @@ class DiaryApp:
                                   activebackground='#6a5cd8', activeforeground='#fff',
                                   command=self.save_entry)
         self.save_btn.pack(side='right')
+
+        self.del_btn = tk.Button(bottom, text='删除', bg='#2a1a1a', fg='#ff6b6b', bd=0,
+                                 font=('SimHei', 10), padx=16, pady=3, cursor='hand2',
+                                 activebackground='#3a2020', activeforeground='#ff4444',
+                                 command=self.delete_entry)
+        self.del_btn.pack(side='right', padx=(0, 8))
         self.current_id = None
 
     def new_entry(self):
@@ -140,6 +146,19 @@ class DiaryApp:
                 self.listbox.selection_set(i)
                 self.listbox.see(i)
                 break
+
+    def delete_entry(self):
+        if self.current_id is None:
+            return
+        confirm = messagebox.askyesno('确认删除', '确定要删除这条日记吗？', parent=self.win)
+        if not confirm:
+            return
+        self.entries = [e for e in self.entries if e.get('id') != self.current_id]
+        self.save()
+        self.current_id = None
+        self.text_area.delete('1.0', 'end')
+        self.text_area.insert('1.0', '选择左侧条目查看，或点击"新建"写新内容')
+        self.do_search()
 
     def on_select(self, e):
         sel = self.listbox.curselection()
